@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -21,9 +21,27 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'department' => 'required'
+        ]);
+
+        // Insert the data to the database
+        $student = new Student();
+        $student->name = $request->name;
+        $student->surname = $request->surname;
+        $student->department = $request->department;
+        $save = $student->save();
+
+        if ($save) {
+            return back()->with('success', 'User created successfully');
+        } else {
+            return back()->with('fail', 'Something wrong, try again.');
+        }
+    
     }
 
     /**
